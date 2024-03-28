@@ -1,7 +1,6 @@
 
-.idea/
+website/.idea/
 
 
-__pycache__/
-*.pyc
-*.pyo
+website/__pycache__/
+
