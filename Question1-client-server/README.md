@@ -88,4 +88,7 @@ The menu of the project provides several options for interacting with the applic
         
         <img src="https://github.com/RivkyTR/Hadasim4/assets/135111313/013e8ec2-96c4-432f-a5ef-5d5925e3284d"  style="width: 30%;">
 
+## assumptions
+I assumed that when displaying the details of all the members in the health fund, only an ID and name are displayed and just by clicking on the member's line, all the personal details about him are opened.
+
 
