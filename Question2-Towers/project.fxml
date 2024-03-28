@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Polygon?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="555.0" prefWidth="775.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ProjectController">
+   <children>
+      <Label layoutX="179.0" layoutY="50.0" prefHeight="62.0" prefWidth="281.0" style="-fx-font-size: 40;" text="Twitter towers" />
+      <Rectangle fx:id="rectangle" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="180.0" layoutX="176.0" layoutY="191.0" onMouseClicked="#rectangleClicked" stroke="BLACK" strokeType="INSIDE" width="90.0" />
+      <Label fx:id="labelTowers" layoutX="193.0" layoutY="131.0" prefHeight="31.0" prefWidth="295.0" text="Please choose which tower you want to build" />
+      <Button fx:id="exitButton" layoutX="289.0" layoutY="465.0" mnemonicParsing="false" onAction="#exitClicked" prefHeight="31.0" prefWidth="62.0" text="Exit" />
+      <Polygon fx:id="triangle" fill="DODGERBLUE" layoutX="406.0" layoutY="333.0" onMouseClicked="#triangleClicked" points="-39.666656494140625, 40.0, 56.000030517578125, 40.0, 10.333343505859375, -146.0" stroke="BLACK" strokeType="INSIDE" />
+      <Pane fx:id="paneDeatails" layoutX="90.0" layoutY="162.0" prefHeight="273.0" prefWidth="351.0" visible="false">
+         <children>
+            <Label layoutY="28.0" prefHeight="25.0" prefWidth="90.0" text="Enter width">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="widthInput" layoutX="101.0" layoutY="28.0" />
+            <TextField fx:id="heightInput" layoutX="101.0" layoutY="83.0" />
+            <Label layoutY="85.0" prefHeight="17.0" prefWidth="82.0" text="Enter height">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <ButtonBar layoutX="189.0" layoutY="405.0" prefHeight="40.0" prefWidth="200.0" />
+   </children>
+</AnchorPane>

@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    
+    /*  styles for table rows */
+    .table-row {
+        border: 5px solid #ccc; 
+        border-radius: 20px; 
+        padding: 20px; 
+    }
+    
+    /*  styles for table headers */
+    #membersTable th {
+        background-color: #f0f0f0; 
+        padding: 10px; 
+        text-align: left; 
+    }
+    #Form div {
+        margin-bottom: 20px; 
+        display: block;
+    }  
+</style>
+</head>
+<body>
+    <div class="buttons-container" id="buttonsContainer">
+        <button id="deleteButton" name="deleteButton" onclick="DeleteMemberFunction()">Delete member</button>
+        <button id="updateButton" name="updateButton" onclick="UpdateMemberFunction()">Update member</button>
+        <button id="addMemberButton" name="addMemberButton" onclick="AddMemberFunction()">Add member</button>
+        <button id="getMemberButton" name="getMemberButton" onclick="GetMemberFunction()">Get member</button>
+    </div>
+    <h1 id="title">Member Details</h1>
+    <div id="membersList"></div>
+    <div id="memberCard" style="display: none;">
+        <h2 id="cardTitle"></h2>
+        <table id="memberDetailsTable">
+            <tr>
+                <th>Field</th>
+                <th>Value</th>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <form id="Form" style="display: none;">
+            <div>
+                <label for="ID" id="id">ID: </label>
+                <input type="number" id="ID" name="ID">
+            </div>
+            
+            <div>
+                <label for="FirstName">First Name: </label>
+                <input type="text" id="FirstName" name="FirstName">
+            </div>
+                
+            <div>
+                <label for="LastName" >Last Name: </label>
+                <input type="text" id="LastName" name="LastName">
+            </div>
+    
+            <div>
+                <label for="City" >City: </label>
+                <input type="text" id="City" name="City">
+            </div>
+    
+            <div>
+                <label for="Street">Street: </label>
+                <input type="text" id="Street" name="Street">
+            </div>
+    
+            <div>
+                <label for="Number">Number: </label>
+                <input type="number" id="Number" name="Number">
+            </div>
+    
+            <div>
+                <label for="DateOfBirth">Date of Birth: </label>
+                <input type="date" id="DateOfBirth" name="DateOfBirth">
+            </div>
+            
+            <div>
+                <label for="Telephone">Telephone: </label>
+                <input type="text" id="Telephone" name="Telephone">
+            </div>
+    
+            <div>
+                <label for="MobilePhone">Mobile Phone: </label>
+                <input type="text" id="MobilePhone" name="MobilePhone">
+            </div>
+    
+            <div>
+                <label for="VaccineDate1">First vaccine date: </label>
+                <input type="date" id="VaccineDate1" name="VaccineDate1">
+            </div>
+    
+            <div>
+                <label for="VaccineDate2">Second vaccine date: </label>
+                <input type="date" id="VaccineDate2" name="VaccineDate2">
+            </div>
+    
+            <div>
+                <label for="VaccineDate3">Third vaccine date: </label>
+                <input type="date" id="VaccineDate3" name="VaccineDate3">
+            </div>
+    
+            <div>
+                <label for="VaccineDate4">Fourth vaccine date: </label>
+                <input type="date" id="VaccineDate4" name="VaccineDate4">
+            </div>
+            
+            <div>
+                <label for="VaccineManufacturer1">Vaccine manufacturer 1: </label>
+                <input type="text" id="VaccineManufacturer1" name="VaccineManufacturer1">
+            </div>
+    
+            <div>
+                <label for="VaccineManufacturer2">Vaccine manufacturer 2: </label>
+                <input type="text" id="VaccineManufacturer2" name="VaccineManufacturer2">
+            </div>
+    
+            <div>
+                <label for="VaccineManufacturer3">Vaccine manufacturer 3: </label>
+                <input type="text" id="VaccineManufacturer3" name="VaccineManufacturer3">
+            </div>
+            
+            <div>
+                <label for="VaccineManufacturer4">Vaccine manufacturer 4: </label>
+                <input type="text" id="VaccineManufacturer4" name="VaccineManufacturer4">
+            </div>
+            
+            <div>
+                <label for="PositiveResultDate">Positive result date: </label>
+                <input type="date" id="PositiveResultDate" name="PositiveResultDate">
+            </div>
+            
+            <div>
+                <label for="RecoveryDate">Recovery date: </label>
+                <input type="date" id="RecoveryDate" name="RecoveryDate">
+            </div>
+            
+        </form>
+    </div>
+    
+<script>
+    document.addEventListener('DOMContentLoaded', createTable);
+    const title = document.getElementById('title');
+//Creates the main table
+async function createTable(){
+    try {
+        const response = await fetch('http://127.0.0.1:5000//members', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const data = await response.json();
+
+        const membersListDiv = document.getElementById('membersList');
+        membersListDiv.innerHTML = ''; // clear previous content
+
+        if (data && data.length > 0) {
+            //creates a table dynamically
+            const membersTable = document.createElement('table');
+            membersTable.id = 'membersTable';
+            //Creates the title row
+            membersTable.innerHTML = `
+                <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                </tr>
+            `;
+            //Creates for each member a row 
+            data.forEach(member => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${member.ID}</td>
+                    <td>${member.FirstName}</td>
+                    <td>${member.LastName}</td>
+                `;
+                row.addEventListener('click', () => showMemberCard(member.ID));
+                row.id = 'row_${member.ID}';
+                row.classList.add('table-row'); 
+                membersTable.appendChild(row);
+            });
+            membersTable.style.borderCollapse = 'collapse';
+            membersTable.style.width = '50%'; 
+            membersListDiv.appendChild(membersTable);
+        } 
+        else { // if there are no members
+            membersListDiv.innerHTML = 'No members found.';
+        }
+    } catch (error) {
+        console.error('Error fetching member details:', error);
+        alert('Error fetching member details. Please try again later.');
+    }
+}
+
+//Displays the data of a member
+async function showMemberCard(ID) {
+    title.textContent = '';
+    HideObjects();
+    title.textContent = 'Get Member';
+    try {
+        GETMember(ID,getDetailsScreen);
+    } catch (error) {
+        console.error('Error getting member details:', error);
+        alert('Error getting member details. Please try again.');
+    }
+}
+
+//Deletes a member of the table
+async function DeleteMemberFunction() {
+    HideObjects();
+    title.textContent = 'Delete Member';
+    try {
+        getID(GETMember, DELETEmember);
+    }catch (error) {
+        console.error('Error deleting member:', error);
+        alert('Error deleting member. Please try again.');
+    }
+} 
+
+//Updates a member of the table
+async function UpdateMemberFunction(){
+    HideObjects();
+    title.textContent = 'Update Member';
+    try {
+        getID(GETMember, updateForm);                             
+    } catch (error) {
+        console.error('Error updating member details:', error);
+        alert('Error updating member details. Please try again.');
+    }              
+}
+
+//Add a member of the table
+async function AddMemberFunction(){
+    HideObjects();
+    title.textContent = 'Add Member';
+    try {
+        openFile(POSTmember, title);
+    } catch (error) {
+        console.error('Error adding member details:', error);
+        alert('Error adding member details. Please try again.');
+    }   
+}
+
+//Displays tht data on a member
+async function GetMemberFunction(){
+    HideObjects();
+    title.textContent = 'Get Member';
+    try {
+        getID(GETMember, getDetailsScreen);
+    } catch (error) {
+        console.error('Error getting member details:', error);
+        alert('Error getting member details. Please try again.');
+    }
+}
+
+//Receives an ID and executes a method with that ID
+function getID(method,methodInner){
+    //Creates an input box and a button to get the ID
+        const inputID = document.createElement('input');
+        inputID.type = 'text';
+        inputID.placeholder = 'Enter the ID ';
+        inputID.style.display = 'block';
+        document.body.appendChild(inputID);
+
+        const submitID = document.createElement('button');
+        submitID.textContent = 'submit';
+        submitID.id = 'submitID';
+        submitID.name = 'submitID';
+        document.body.appendChild(submitID);
+
+        submitID.addEventListener('click', async () => {
+            submitID.remove();
+            inputID.remove();
+            const ID = inputID.value.trim();
+            if (!ID) {
+                alert('Please enter a valid member ID.');
+                BackObjects();
+                return;
+            }
+            try {
+                await method(ID, methodInner);
+            } catch (error) {
+                console.error('Error fetching member details:', error);
+                alert('Error fetching member details. Please try again.');
+            }
+        });
+}
+
+//Handles the data it receives from the form
+function openFile(method,ID){
+    const form = document.getElementById('Form');
+    form.style.display = 'block';
+
+    const submit = document.createElement('button');
+    submit.textContent = 'submit';
+    submit.id = 'submit';
+    document.body.appendChild(submit);
+    submit.addEventListener('click', async () => {
+        submit.remove()
+        
+        await method(ID);
+
+        createTable();
+        BackObjects();
+        form.style.display = 'none';
+        resetFields();
+    });
+}
+
+//Updates the form with the member details
+function updateForm(memberDetails){
+    Object.entries(memberDetails).forEach(([key, value]) => {
+        const attribute = document.getElementById(key);
+        if (attribute ) {
+            attribute.value = value;
+            if (['VaccineDate1', 'VaccineDate2', 'VaccineDate3', 'VaccineDate4',
+                'VaccineManufacturer1', 'VaccineManufacturer2', 'VaccineManufacturer3', 'VaccineManufacturer4',
+                'PositiveResultDate', 'RecoveryDate'].includes(key) && value !== null  || 'DateOfBirth' == key || 'ID' == key) {
+                attribute.disabled = true; //Forcing the client to not be able to change these fields that already have a value
+            }
+        }
+    });
+    openFile(PUTmember,memberDetails.ID);
+}
+
+//Sends a POST request to the server
+async function POSTmember(ID){
+    try {
+        const response = await fetch(`/members`, {
+            method: 'POST',
+            headers: {
+                    'Content-Type': 'application/json'
+                    },
+            body: getData()
+        });
+        if (response.ok) {
+            alert('Member added successfully.');
+            return;
+        }else {
+            const errorData = await response.json();
+            console.error('Error:', errorData.errors);
+            alert('Error adding member. Please try again.');
+        }
+    } catch (error) {
+        console.error('Error adding member details:', error);
+        alert('Error adding member details. Please try again.');
+    }
+}
+
+//Sends a PUT request to the server
+async function PUTmember(ID){
+    try {
+        const response = await fetch(`/members/${ID}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: getData()
+        });
+        if (response.ok) {
+            alert('Member updated successfully.');
+        } else {
+            alert('Error updating member. Please try again.');
+        }
+    } catch (error) {
+        console.error('Error updatig member details:', error);
+        alert('Error updating member details. Please try again.');
+    }
+}
+
+//Sends a DELETE request to the server
+async function DELETEmember(memberDetails){
+    try {
+        const response = await fetch(`/members/${memberDetails.ID}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        if (!response.ok) {
+            BackObjects();
+            throw new Error('Error deleting member.');
+        }
+        alert('Member deleted successfully.');
+        createTable();
+        BackObjects();
+    } catch (error) {
+        console.error('Error deleting member details:', error);
+        alert('Error deleting member details. Please try again.');
+    }
+}
+
+//Sends a GET request to the server
+async function GETMember(ID,method){
+    try {
+        const response = await fetch(`/members/${ID}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        if (!response.ok) {
+            BackObjects();
+            throw new Error('No member with this ID.');
+        }
+        const memberDetails = await response.json();
+        method(memberDetails);
+    } catch (error) {
+        console.error('Error fetching member details:', error);
+        if (error){
+            alert(error);
+        }else{
+            alert('Error fetching member details. Please try again.');
+        }
+    }
+}
+
+//creates a table with member details
+function getDetailsScreen(memberDetails) {
+    console.log('Member Details:', memberDetails);
+    const cardTitle = document.getElementById('cardTitle');
+    const memberDetailsTable = document.getElementById('memberDetailsTable');
+    const tableBody = memberDetailsTable.getElementsByTagName('tbody')[0];
+
+    cardTitle.textContent = `Member ID: ${memberDetails.ID}`;
+
+    tableBody.innerHTML = '';
+    // add the member details to table
+    for (const key in memberDetails) {
+        if (memberDetails.hasOwnProperty(key)) {
+            const row = tableBody.insertRow();
+            const cell1 = row.insertCell();
+            const cell2 = row.insertCell();
+            cell1.textContent = key;
+            cell2.textContent = memberDetails[key];
+        }
+    }
+
+    const memberCard = document.getElementById('memberCard');
+    memberCard.style.display = 'block';
+    //creates a button to go back to the main menu when clicking on it
+    const goBack = document.createElement('button');
+    goBack.id = 'goBack';
+    goBack.name = 'goBack';
+    goBack.textContent = 'Back';
+    document.body.appendChild(goBack);
+
+    goBack.addEventListener('click', () => {
+        goBack.remove();
+        BackObjects();
+        memberCard.style.display = 'none';
+    });
+}
+
+//Reads the information from the INPUT boxes of the form and converts it to JSON request
+function getData(){
+    const form = document.getElementById('Form');
+    setDisableFalse();
+    const formData = new FormData(form);
+    /*The vaccination dates and the vaccine manufacturers are entered into a separate array,
+    In order to be entered in  newDetails as one piece, to send a JSON request that the server expects to receive*/            
+    const newDetails = {};
+    let VaccineDates = [];
+    let VaccineManufacturers = [];
+    formData.forEach((value, key) => {
+        if (key == 'VaccineDate1' || key == 'VaccineDate2' || key == 'VaccineDate3' || key == 'VaccineDate4'){
+            VaccineDates.push(value);
+        }
+        else if (key == 'VaccineManufacturer1' || key == 'VaccineManufacturer2' || key == 'VaccineManufacturer3' || key == 'VaccineManufacturer4'){
+            VaccineManufacturers.push(value);
+        }
+        else{
+            newDetails[key] = value.trim();
+        }
+        newDetails['VaccineDates'] = VaccineDates;
+        newDetails['VaccineManufacturers'] = VaccineManufacturers;
+    });
+    return JSON.stringify(newDetails);
+}
+
+//Hides the main menu
+function HideObjects(){
+    const membersListDiv = document.getElementById('membersList');
+    const buttonsContainer = document.getElementById('buttonsContainer');
+
+    membersListDiv.style.display = 'none';
+    buttonsContainer.style.display = 'none';
+}
+
+//Returns the main menu
+function BackObjects(){
+    const membersListDiv = document.getElementById('membersList');
+    const buttonsContainer = document.getElementById('buttonsContainer');
+    
+    membersListDiv.style.display = 'block';
+    buttonsContainer.style.display = 'block'
+    title.textContent = 'Members Details';
+}
+
+//reset fields of the form
+function resetFields() {
+    const form = document.getElementById('Form');
+    form.reset();
+}
+
+//set the fields of the form
+function setDisableFalse(){
+    const form = document.getElementById('Form');
+    form.querySelectorAll('input').forEach(input => {
+        input.disabled = false;
+    });
+}
+</script>
+</body>
+</html>
