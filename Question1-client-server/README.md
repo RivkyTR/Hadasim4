@@ -6,11 +6,13 @@
    git clone https://github.com/RivkyTR/Hadasim4.git
 ```
 
-2. Install the required libraries using pip:
+2. Install the required libraries using pip `sqlite3`, `flask`, and `flask_cors`:
 ```bash
-   pip install -r requirements.txt
+   pip install sqlite3
+   pip install flask
+   pip install flask_cors
+
 ```
-This will install the necessary libraries including `sqlite3`, `flask`, and `flask_cors`.
 
 
 ## Running
